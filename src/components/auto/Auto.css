@@ -1,0 +1,16 @@
+.bodymodal {
+    background-color:#8492A6 !important;
+    
+}
+
+.bodybutton {
+    background-color:#47525E !important;
+    color: #ffff;
+}
+.bodydiv{
+    padding: 10px !important;
+}
+
+.center-col {
+    overflow-y: scroll !important;
+  }
