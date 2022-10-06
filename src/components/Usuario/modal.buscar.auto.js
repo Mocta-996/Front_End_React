@@ -14,57 +14,38 @@ import ModalReservar from "./modal.reservar.js";
 import ModalResenia from "./modal.view.js";
 import "./Usuario.css";
 
-function BuscarHotel(props) {
+function BuscarAuto(props) {
     const [search, setSearch] = useState("");
-    const [hotel, setHotel] = useState([]);
-    const [tableHotel, setTableHotel] = useState([]);
+    const [auto, setAuto] = useState([]);
+    const [tableAuto, setTableAuto] = useState([]);
     const [radioValue, setRadioValue] = useState("1");
     const [showModalReservar, setShowModalReservar] = useState(false);
     const [showModalResenia,setShowModalResenia] = useState(false);
-    const [dataHotel, setDataHotel] = useState({});
+    const [dataAuto, setDataAuto] = useState({});
 
     const radios = [
-        { name: "Pais", value: "1", variant: "outline-dark" },
-        { name: "Ciudad", value: "2", variant: "outline-dark" },
-        { name: "Cantidad de Personas", value: "3", variant: "outline-dark" },
-        { name: "Rango precios", value: "4", variant: "outline-dark" },
-        { name: "Rango de fecha", value: "5", variant: "outline-dark" },
+        { name: "Marca", value: "1", variant: "outline-dark" },
+        { name: "Modelo", value: "2", variant: "outline-dark" },
+        { name: "Rango precios", value: "3", variant: "outline-dark" }
     ];
     const showModal = (data) => {
         setShowModalReservar(true);
-        setDataHotel(data);
+        setDataAuto(data);
         console.log(data)
     }
 
     const showModalRes = (data) => {
         setShowModalResenia(true);
-        setDataHotel(data);
+        setDataAuto(data);
         console.log(data)
     }
-
-    /*
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        // agregar id hotel
-        room.hotel_id = props.hotel_id;
-        room.imagen = image.preview;
-        console.log(room);
-    };
-
-    const handleFileChange = (e) => {
-        const img = {
-            preview: URL.createObjectURL(e.target.files[0]),
-            data: e.target.files[0],
-        };
-        setImage(img);
-    };*/
     const handleChange = (e) => {
         setSearch(e.target.value);
         filtrar(e.target.value);
     };
 
     const filtrar = (terminosearch) => {
-        var resultadossearch = tableHotel.filter((elemento) => {
+        var resultadossearch = tableAuto.filter((elemento) => {
             if (radioValue === "1") {
                 if (
                     elemento.pais
@@ -89,11 +70,11 @@ function BuscarHotel(props) {
             }*/
         });
         //console.log(resultadossearch);
-        setHotel(resultadossearch);
+        setAuto(resultadossearch);
     };
     useEffect(() => {
-        setHotel(data);
-        setTableHotel(data);
+        setAuto(data);
+        setTableAuto(data);
     }, []);
 
     return (
@@ -106,7 +87,7 @@ function BuscarHotel(props) {
         >
             <Modal.Header closeButton className="bodymodal">
                 <Modal.Title id="contained-modal-title-vcenter ">
-                    Buscar Hotel
+                    Buscar Automóvil
                 </Modal.Title>
             </Modal.Header>
             <Row>
@@ -144,26 +125,21 @@ function BuscarHotel(props) {
                 <Col xs lg="2"></Col>
             </Row>
             <Modal.Body>
-                {hotel.map((tab, index) => (
+                {auto.map((tab, index) => (
                     <Col key={index} className ="bodydiv">
                         <Card border="dark">
                             <Card.Img variant="top" src={tab.imagen} />
                             <Card.Body>
-                                <Card.Title>Habitación {tab.numero}</Card.Title>
+                                <Card.Title> {tab.marca} {"  "} {tab.modelo}</Card.Title>
                                 <Card.Text>
-                                    {tab.descripcion}
+                                    <b> Estado: </b>{" "}
+                                    {tab.estado}
                                     <br />
-                                    <b> Cantidad Disponible: </b>{" "}
-                                    {tab.cantidad_disponible}
+                                    <b> Placa: </b>{" "}
+                                    {tab.placa}
                                     <br />
                                     <b> Precio: </b> {tab.precio}
                                     <br />
-                                    <b> Fecha Disponibilidad: </b>{" "}
-                                    {tab.fecha_disponibilidad}
-                                    <br />
-                                    <b> País: </b> {tab.pais}
-                                    <br />
-                                    <b> Ciudad: </b> {tab.ciudad}
                                 </Card.Text>
                                 <Button
                                     variant="dark"
@@ -185,16 +161,16 @@ function BuscarHotel(props) {
                 <ModalReservar
                     show={showModalReservar}
                     onHide={() => setShowModalReservar(false)}
-                    data={dataHotel}
-                    showoption={1}
+                    data={dataAuto}
+                    showoption={2}
                 />
 
                 {/* VER SERVICIO */}
                 <ModalResenia
                     show={showModalResenia}
                     onHide={() => setShowModalResenia(false)}
-                    data={dataHotel}
-                    showoption={1}
+                    data={dataAuto}
+                    showoption={2}
                 />
             </Modal.Body>
         </Modal>
@@ -202,50 +178,36 @@ function BuscarHotel(props) {
 }
 const data = [
     {
-        cantidad_disponible: 12,
-        descripcion: "Habitación doble1",
-        fecha_disponibilidad: "2021-10-10",
-        id_habitacion: 1,
+        marca:"toyota",
+        placa: "1234",
+        modelo: "yaris",
+        precio:100,
+        rental_id: 1,
         imagen: "../../images/image1.jpg",
-        numero: 1,
-        precio: 100,
-        pais: "Colombia",
-        ciudad: "Bogota",
+        estado: "Disponible",
+        auto_id: 1
     },
     {
-        cantidad_disponible: 1,
-        descripcion: "Habitación doble2",
-        fecha_disponibilidad: "2021-10-10",
-        id_habitacion: 1,
+        marca:"toyota",
+        placa: "1234",
+        modelo: "yaris",
+        precio:100,
+        rental_id: 1,
         imagen: "../../images/image1.jpg",
-        numero: 1,
-        precio: 100,
-        pais: "Ecuador",
-        ciudad: "Quito",
+        estado: "No Disponible",
+        auto_id: 1
     },
     {
-        cantidad_disponible: 3,
-        descripcion: "Habitación doble",
-        fecha_disponibilidad: "2021-10-10",
-        id_habitacion: 1,
+        marca:"toyota",
+        placa: "1234",
+        modelo: "yaris",
+        precio:100,
+        rental_id: 1,
         imagen: "../../images/image1.jpg",
-        numero: 1,
-        precio: 100,
-        pais: "Guatemala",
-        ciudad: "Guatemala",
-    },
-    {
-        cantidad_disponible: 10,
-        descripcion: "Habitación doble",
-        fecha_disponibilidad: "2021-10-10",
-        hotel_id: 1,
-        imagen: "../../images/image1.jpg",
-        numero: 1,
-        precio: 100,
-        pais: "Honduras",
-        ciudad: "Tegucigalpa",
-    },
+        estado: "Disponible",
+        auto_id: 1
+    }
 ];
 
 
-export default BuscarHotel;
+export default BuscarAuto;

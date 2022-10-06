@@ -10,9 +10,11 @@ import img from "../../images/image1.jpg";
 import Swal from "sweetalert2";
 import ButtonGroup from 'react-bootstrap/ButtonGroup';
 import ModalHotel from "./modal.buscar.hotel.js";
+import ModalAuto from "./modal.buscar.auto.js";
 
 function Usuario(props) {
     const [showModal, setShowModal] = useState(false);
+    const [showModalAuto, setShowModalAuto] = useState(false);
     
 
     return (
@@ -22,7 +24,9 @@ function Usuario(props) {
                 <Col xs={2} md={4}></Col>
                 <Col xs={8} md={4}>
                     <ButtonGroup size="lg" className="mb-2">
-                        <Button variant="secondary" >Autos {"  "}
+                        <Button variant="secondary"  onClick={() =>
+                                        setShowModalAuto(true)
+                                    } >Autos {"  "}
                         <ion-icon size="large" name="car-sport"></ion-icon>
                         </Button>
                         <Button variant="secondary"  onClick={() =>
@@ -79,6 +83,7 @@ function Usuario(props) {
             </Row>
             <Row>
             <ModalHotel show={showModal} onHide={() => setShowModal(false)} />
+            <ModalAuto show={showModalAuto} onHide={() => setShowModalAuto(false)} />
             </Row>
             
         </Container>

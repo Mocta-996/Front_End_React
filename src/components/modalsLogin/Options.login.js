@@ -7,6 +7,7 @@ import Row from "react-bootstrap/Row";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import "./Options.login.css";
+import axios from "axios";
 
 function OptionsLogin(props) {
     const [option, setOption] = useState(0);
@@ -20,12 +21,21 @@ function OptionsLogin(props) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(userdata);
+        try{
+            const data=new FormData()
+            data.append("info",JSON.stringify(userdata))
+            const res=axios.post(" http://35.239.122.121:4000/api/fulltrip/v1/main/login",data);
+            console.log(res)
+          }catch(ex){
+            console.log(ex)
+          }
+
+        //console.log(userdata);
     };
 
     return (
         <Modal
-            {...props}
+        show={props.show} onHide={props.onHide}
             size="md"
             aria-labelledby="contained-modal-title-vcenter"
             centered

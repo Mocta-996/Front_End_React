@@ -10,6 +10,7 @@ import Alert from "react-bootstrap/Alert";
 import Spinner from 'react-bootstrap/Spinner';
 import "./Options.register.css";
 import {useNavigate} from 'react-router-dom';
+import axios from "axios";
 
 function OptionsRegister(props) {
     const [option, setOption] = useState(0);
@@ -73,14 +74,26 @@ function OptionsRegister(props) {
                     return;
                 }
                 // registrar usuario
-                setShowAlertSucces(true);
-                setTimeout(function(){
-                    setShowAlertSucces(false);
-                }, 2000);
-                props.onHide();
-                localStorage.setItem("user",JSON.stringify(userdata));
-                props.update();
-                navigate("/dashboard");
+                const data=new FormData()
+                data.append("info",JSON.stringify(userdata))
+            
+                try{
+                  const res=axios.post("http://35.239.122.121:4000/api/fulltrip/v1/main/registro",data);
+                  console.log(res)
+                    setShowAlertSucces(true);
+                    setTimeout(function(){
+                        setShowAlertSucces(false);
+                    }, 2000);
+                    props.onHide();
+                    //localStorage.setItem("user",JSON.stringify(userdata));
+                    props.update();
+                    navigate("/dashboard");
+
+                }catch(ex){
+                  console.log(ex)
+                }
+
+                
                 
 
                 break;
@@ -747,4 +760,10 @@ const options = [
         icon: "airplane",
     },
 ];
-export default OptionsRegister;
+
+
+
+
+
+
+  export default OptionsRegister;
