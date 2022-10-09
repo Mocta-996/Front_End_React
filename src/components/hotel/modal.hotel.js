@@ -7,16 +7,17 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
 import "./Hotel.css";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 function AddRoom(props) {
     const [room, setRoom] = useState({
-        numero: "",
+        capacidad: "",
         cantidad_disponible: "",
         precio: "",
         fecha_disponibilidad: "",
         descripcion: "",
         hotel_id: "",
-        imagen: null,
     });
     const [image, setImage] = useState({ preview: "", data: "" });
 
@@ -27,8 +28,27 @@ function AddRoom(props) {
         e.preventDefault();
         // agregar id hotel
         room.hotel_id = props.hotel_id;
-        room.imagen = image.preview;
         console.log(room);
+        const add = new FormData();
+        add.append("imagen", image.data);
+        add.append("info", JSON.stringify(room));
+
+        try {
+            console.log(add);
+            const res = await axios.post(
+                "http://35.239.122.121:4000/api/fulltrip/v1/hotel/addRoom",
+                add
+            );
+            console.log(res);
+            swAlert("Exito","Habitación agregada con exito","success");
+            props.update();
+            props.onHide();
+        } catch (ex) {
+            console.log(ex);
+            swAlert("Error","Error al agregar habitación, intente más tarde","error");
+            props.update();
+            props.onHide();
+        }
     };
 
     const handleFileChange = (e) => {
@@ -56,13 +76,13 @@ function AddRoom(props) {
                 <>
                     <Form onSubmit={handleSubmit}>
                         <Form.Group className="mb-3" controlId="numero">
-                            <Form.Label>Número de habitación</Form.Label>
+                            <Form.Label>Capacidad de habitación</Form.Label>
                             <Form.Control
                                 type="number"
                                 onChange={(e) =>
                                     setRoom({
                                         ...room,
-                                        numero: e.target.value,
+                                        capacidad: e.target.value,
                                     })
                                 }
                                 required
@@ -181,4 +201,7 @@ function AddRoom(props) {
     );
 }
 
+const swAlert = (header,msg,icon) => {
+    Swal.fire(header,msg,icon);
+};
 export default AddRoom;

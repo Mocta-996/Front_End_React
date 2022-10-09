@@ -7,6 +7,8 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
 import "./Aerolinea.css";
+import axios from "axios";
+import Swal from "sweetalert2";
 
 function AddVuelo(props) {
     const [vuelo, setVuelo] = useState({
@@ -27,8 +29,28 @@ function AddVuelo(props) {
         e.preventDefault();
         // agregar id hotel
         vuelo.aerolinea_id = props.airline_id;
-        vuelo.imagen = image.preview;
+        vuelo.imagen = image.data;
         console.log(vuelo);
+        const add = new FormData();
+        add.append("imagen", image.data);
+        add.append("info", JSON.stringify(vuelo));
+
+        try {
+            console.log(add);
+            const res = await axios.post(
+                "http://35.239.122.121:4000/api/fulltrip/v1/aerolinea/addFlight",
+                add
+            );
+            console.log(res);
+            swAlert("Exito","Vuelo agregado con exito","success");
+            props.update();
+            props.onHide();
+        } catch (ex) {
+            console.log(ex);
+            swAlert("Error","Error al agregar Vuelo, intente más tarde","error");
+            props.update();
+            props.onHide();
+        }
     };
 
     const handleFileChange = (e) => {
@@ -73,7 +95,7 @@ function AddVuelo(props) {
                             <Form.Label>Destino </Form.Label>
                             <Form.Control
                                 type="text"
-                                placeholder="Ingrese la marca"
+                                placeholder="Ingrese el destino"
                                 onChange={(e) =>
                                     setVuelo({
                                         ...vuelo,
@@ -87,8 +109,8 @@ function AddVuelo(props) {
                         <Form.Group className="mb-3" controlId="cantidad">
                             <Form.Label>Cantidad disponible</Form.Label>
                             <Form.Control
-                                type="text"
-                                placeholder="Ingrese la placa"
+                                type="number"
+                                placeholder="Ingrese la cantidad"
                                 onChange={(e) =>
                                     setVuelo({
                                         ...vuelo,
@@ -201,4 +223,8 @@ function AddVuelo(props) {
     );
 }
 
+
+const swAlert = (header,msg,icon) => {
+    Swal.fire(header,msg,icon);
+};
 export default AddVuelo;

@@ -1,5 +1,5 @@
 import React from "react";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
@@ -9,9 +9,27 @@ import ModalHotel from "./modal.hotel";
 import Card from "react-bootstrap/Card";
 import img from "../../images/image1.jpg";
 import Swal from "sweetalert2";
+import axios from "axios";
 
 function Hotel(props) {
     const [showModal, setShowModal] = useState(false);
+    const [dataHotel, setDataHotel] = useState([]);
+
+    useEffect(() => {
+        handlerData();
+    }, []);
+
+    const handlerData = async () => {
+        try{
+            const id_ = {id_hotel:props.hotel_id};
+            console.log(id_)
+            const res= await axios.post("http://35.239.122.121:4000/api/fulltrip/v1/hotel/getData",{info:JSON.stringify(id_)});
+            setDataHotel(res.data.data);
+          }catch(ex){
+            console.log(ex);
+            Error();
+          }
+    };
 
     return (
         <Container>
@@ -28,22 +46,22 @@ function Hotel(props) {
                 <Col xs={2} md={4}></Col>
             </Row>
             <Row>
-                <h2>Servicios del hotel: aqui va el nombre del hotel</h2>
+                <h2>Servicios del hotel: {props.name_hotel}</h2>
                 <br/>
                 <br/>
             </Row>
             <Row xs={1} md={2} className="g-4 ">
-                {data.map((tab, index) => (
+                {dataHotel.map((tab, index) => (
                     <Col key={index} style={{ width: "17rem" }}>
                         <Card border="dark">
-                            <Card.Img variant="top" src={img} />
+                            <Card.Img variant="top" src={tab.imagen} />
                             <Card.Body>
-                                <Card.Title>Habitación {tab.numero}</Card.Title>
+                                <Card.Title>Habitación </Card.Title>
                                 <Card.Text>
                                     {tab.descripcion}
                                     <br />
-                                    <b> Cantidad Disponible: </b>{" "}
-                                    {tab.cantidad_disponible}
+                                    <b> Capacidad: </b>{" "}
+                                    {tab.capacidad}
                                     <br />
                                     <b> Precio: </b> {tab.precio}
                                     <br />
@@ -70,6 +88,7 @@ function Hotel(props) {
                     show={showModal}
                     onHide={() => setShowModal(false)}
                     hotel_id={props.hotel_id}
+                    update={handlerData}
                 />
             </Row>
         </Container>
@@ -132,4 +151,8 @@ const questionDelete = (e) => {
     });
 };
 
+
+const Error = () => {
+    Swal.fire("Error","Ocurrio un problema, intente más tarde", "error");
+};
 export default Hotel;

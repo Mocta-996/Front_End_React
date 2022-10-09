@@ -7,10 +7,11 @@ import Row from "react-bootstrap/Row";
 import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
-import Spinner from 'react-bootstrap/Spinner';
+import Spinner from "react-bootstrap/Spinner";
 import "./Options.register.css";
-import {useNavigate} from 'react-router-dom';
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 function OptionsRegister(props) {
     const [option, setOption] = useState(0);
@@ -26,7 +27,7 @@ function OptionsRegister(props) {
         email: "",
         pass1: "",
         pass2: "",
-        rol:1
+        rol: 1,
     });
 
     const [hoteldata, setHoteldata] = useState({
@@ -35,7 +36,7 @@ function OptionsRegister(props) {
         city: "",
         email: "",
         pass: "",
-        rol:2
+        rol: 2,
     });
 
     const [rentalsdata, setRentalsdata] = useState({
@@ -44,7 +45,7 @@ function OptionsRegister(props) {
         city: "",
         email: "",
         pass: "",
-        rol:3
+        rol: 3,
     });
 
     const [airlinedata, setAirlinedata] = useState({
@@ -53,7 +54,7 @@ function OptionsRegister(props) {
         city: "",
         email: "",
         pass: "",
-        rol:4
+        rol: 4,
     });
     const showForm = (e) => {
         setOption(e);
@@ -68,73 +69,98 @@ function OptionsRegister(props) {
                 // verificar que las contraseñas sean iguales
                 if (userdata.pass1 !== userdata.pass2) {
                     setShowAlert(true);
-                    setTimeout(function(){
+                    setTimeout(function () {
                         setShowAlert(false);
                     }, 3000);
                     return;
                 }
                 // registrar usuario
-                const data=new FormData()
-                data.append("info",JSON.stringify(userdata))
-            
-                try{
-                  const res=axios.post("http://35.239.122.121:4000/api/fulltrip/v1/main/registro",data);
-                  console.log(res)
-                    setShowAlertSucces(true);
-                    setTimeout(function(){
-                        setShowAlertSucces(false);
-                    }, 2000);
+                try {
+                    const res = await axios.post(
+                        "http://35.239.122.121:4000/api/fulltrip/v1/main/registro",
+                        {
+                            info: JSON.stringify({
+                                name: userdata.name,
+                                user: userdata.user,
+                                date: userdata.date,
+                                email: userdata.email,
+                                pass: userdata.pass1,
+                                rol: userdata.rol,
+                            }),
+                        }
+                    );
+                    console.log(res);
+                    Error(
+                        "Agrergado",
+                        `${res.data.msg}  ,Inicie Sesión`,
+                        "success"
+                    );
                     props.onHide();
-                    //localStorage.setItem("user",JSON.stringify(userdata));
-                    props.update();
-                    navigate("/dashboard");
-
-                }catch(ex){
-                  console.log(ex)
+                } catch (ex) {
+                    console.log(ex);
+                    Error("Error", ex.response.data.msg, "error");
                 }
-
-                
-                
-
                 break;
+
             case 2:
                 console.log(hoteldata);
-                setShowAlertSucces(true);
-                setTimeout(function(){
-                    setShowAlertSucces(false);
-                }, 2000);
-                // code block
-                props.onHide();
-                localStorage.setItem("user",JSON.stringify(hoteldata));
-                props.update();
-                navigate("/dashboard");
-
-                // code block
+                // registrar usuario
+                try {
+                    const res = await axios.post(
+                        "http://35.239.122.121:4000/api/fulltrip/v1/main/registro",
+                        { info: JSON.stringify(hoteldata) }
+                    );
+                    console.log(res);
+                    Error(
+                        "Agrergado",
+                        `${res.data.msg}  ,Inicie Sesión`,
+                        "success"
+                    );
+                    props.onHide();
+                } catch (ex) {
+                    console.log(ex);
+                    Error("Error", ex.response.data.msg, "error");
+                }
                 break;
             case 3:
                 console.log(rentalsdata);
-                setShowAlertSucces(true);
-                setTimeout(function(){
-                    setShowAlertSucces(false);
-                }, 2000);
-                // code block
-                props.onHide();
-                localStorage.setItem("user",JSON.stringify(rentalsdata));
-                props.update();
-                navigate("/dashboard");
-                
+                try {
+                    const res = await axios.post(
+                        "http://35.239.122.121:4000/api/fulltrip/v1/main/registro",
+                        { info: JSON.stringify(rentalsdata) }
+                    );
+                    console.log(res);
+                    Error(
+                        "Agrergado",
+                        `${res.data.msg}  ,Inicie Sesión`,
+                        "success"
+                    );
+                    props.onHide();
+                } catch (ex) {
+                    console.log(ex);
+                    Error("Error", ex.response.data.msg, "error");
+                }
+
                 break;
             case 4:
                 console.log(airlinedata);
-                setShowAlertSucces(true);
-                setTimeout(function(){
-                    setShowAlertSucces(false);
-                }, 2000);
-                 // code block
-                 props.onHide();
-                 localStorage.setItem("user",JSON.stringify(airlinedata));
-                 props.update();
-                 navigate("/dashboard");
+
+                try {
+                    const res = await axios.post(
+                        "http://35.239.122.121:4000/api/fulltrip/v1/main/registro",
+                        { info: JSON.stringify(airlinedata) }
+                    );
+                    console.log(res);
+                    Error(
+                        "Agrergado",
+                        `${res.data.msg}  ,Inicie Sesión`,
+                        "success"
+                    );
+                    props.onHide();
+                } catch (ex) {
+                    console.log(ex);
+                    Error("Error", ex.response.data.msg, "error");
+                }
                 break;
             default:
                 setShowError(true);
@@ -143,7 +169,13 @@ function OptionsRegister(props) {
     };
 
     return (
-        <Modal  size="md"  aria-labelledby="contained-modal-title-vcenter"  centered show={props.show} onHide={props.onHide}>
+        <Modal
+            size="md"
+            aria-labelledby="contained-modal-title-vcenter"
+            centered
+            show={props.show}
+            onHide={props.onHide}
+        >
             <Modal.Header closeButton className="bodymodal">
                 <Modal.Title id="contained-modal-title-vcenter ">
                     Registrarse
@@ -714,23 +746,22 @@ function OptionsRegister(props) {
                 {showAlertSucces && (
                     <Alert
                         variant="success"
-                        className ="bodyAlert"
+                        className="bodyAlert"
                         onClose={() => setShowAlertSucces(false)}
                         dismissible
                     >
-                    Registro éxitoso, espere un momento por favor...
-                        
-                    <Spinner animation="grow" variant="success"  />
+                        Registro éxitoso, espere un momento por favor...
+                        <Spinner animation="grow" variant="success" />
                     </Alert>
                 )}
                 {showError && (
                     <Alert
                         variant="success"
-                        className ="bodyAlert"
+                        className="bodyAlert"
                         onClose={() => setShowError(false)}
                         dismissible
                     >
-                    Ocurrio un Error, intente más tarde...
+                        Ocurrio un Error, intente más tarde...
                     </Alert>
                 )}
             </Modal.Body>
@@ -761,9 +792,8 @@ const options = [
     },
 ];
 
+const Error = (type, msg, icon) => {
+    Swal.fire(type, msg, icon);
+};
 
-
-
-
-
-  export default OptionsRegister;
+export default OptionsRegister;

@@ -14,8 +14,9 @@ function Reservar(props) {
         cantidad: 0,
         contrasenia: "",
         id_usuario: "",
-        id_hotel: "",
         id_habitacion: "",
+        startDate: "",
+        endDate: "",
     });
 
     const handleSubmit = async (e) => {

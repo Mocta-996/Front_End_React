@@ -42,7 +42,7 @@ function Usuario(props) {
                 <Col xs={2} md={4}></Col>
             </Row>
             <Row>
-                <h2>Servicios del hotel: aqui va el nombre del hotel</h2>
+                <h2>Mis servicios</h2>
                 <br />
                 <br />
             </Row>

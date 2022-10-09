@@ -8,29 +8,44 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import "./Options.login.css";
 import axios from "axios";
+import {useNavigate} from 'react-router-dom';
+import Swal from "sweetalert2";
 
 function OptionsLogin(props) {
     const [option, setOption] = useState(0);
     const [showform, setShowform] = useState(false);
-    const [userdata, setUserdata] = useState({ user: "", pass: "" });
+    const [userdata, setUserdata] = useState({ user: "", pass: "",rol:0 });
+    const navigate = useNavigate();
 
     const showForm = (e) => {
         setOption(e);
         setShowform(true);
+        setUserdata({
+            ...userdata,
+            rol:e,
+        });
     };
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try{
-            const data=new FormData()
-            data.append("info",JSON.stringify(userdata))
-            const res=axios.post(" http://35.239.122.121:4000/api/fulltrip/v1/main/login",data);
-            console.log(res)
+            console.log(userdata)
+            const res= await axios.post(" http://35.239.122.121:4000/api/fulltrip/v1/main/login",{info:JSON.stringify(userdata)});
+            const {data} = res
+            props.onHide();
+            localStorage.setItem("user",JSON.stringify(data.data));
+            props.update();
+            navigate("/dashboard");
           }catch(ex){
-            console.log(ex)
+            console.log(ex.response.data);
+            const {status, msg} = ex.response.data;
+            if(!status){
+                Error(msg);
+            } 
+            else {
+                Error("Ha ocurrido un error, intente mas tarde");
+            }
           }
-
-        //console.log(userdata);
     };
 
     return (
@@ -154,4 +169,8 @@ const options = [
         icon: "airplane",
     },
 ];
+
+const Error = (msg) => {
+    Swal.fire("Error",msg, "error");
+};
 export default OptionsLogin;

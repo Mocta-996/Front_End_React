@@ -7,6 +7,7 @@ import Aerolinea from "../components/Aerolinea/Aerolinea.js";
 import Usuario from "../components/Usuario/Usuario.js";
 import {useNavigate} from 'react-router-dom';
 
+
 function Dashboard() {
     const [userlog, setUserlog] = useState(false);
     const [userdata, setUserdata] = useState(null);
@@ -21,9 +22,8 @@ function Dashboard() {
         if (localStorage.getItem("user")) {
             setUserlog(true);
             setUserdata(JSON.parse(localStorage.getItem("user")));
-            console.log(userdata)
-            console.log("hay un usuario logueado");
             
+            console.log(JSON.parse(localStorage.getItem("user")));
         } else {
             setUserlog(false);
             console.log("no hay un usuario logueado");
@@ -40,15 +40,15 @@ function Dashboard() {
                         );
                     case 2:
                         return (
-                            <Hotel hotel_id={1}/>
+                            <Hotel hotel_id={userdata.id_user} name_hotel = {userdata.name}/>
                         );
                     case 3:
                         return (
-                            <Autos rental_id={1}/>
+                            <Autos rental_id={userdata.id_user} name_rental = {userdata.name}/>
                         );
                     case 4:
                         return (
-                            <Aerolinea airline_id={1}/>
+                            <Aerolinea airline_id={userdata.id_user} name_airline = {userdata.name}/>
                         );
                     default:
                         return (

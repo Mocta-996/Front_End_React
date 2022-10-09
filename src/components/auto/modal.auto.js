@@ -7,6 +7,9 @@ import Form from "react-bootstrap/Form";
 import Button from "react-bootstrap/Button";
 import Alert from "react-bootstrap/Alert";
 import "./Auto.css";
+import axios from "axios";
+import Swal from "sweetalert2";
+
 
 function AddRental(props) {
     const [auto, setAuto] = useState({
@@ -26,8 +29,31 @@ function AddRental(props) {
         e.preventDefault();
         // agregar id hotel
         auto.rental_id = props.rental_id;
-        auto.imagen = image.preview;
-        console.log(auto);
+        auto.imagen = image.data;
+
+        const add = new FormData();
+        add.append("imagen", image.data);
+        add.append("info", JSON.stringify(auto));
+
+        try {
+            console.log(add);
+            const res = await axios.post(
+                "http://35.239.122.121:4000/api/fulltrip/v1/rentaautos/addcar",
+                add
+            );
+            console.log(res);
+            swAlert("Exito","Automóvil agregada con exito","success");
+            props.update();
+            props.onHide();
+        } catch (ex) {
+            console.log(ex);
+            swAlert("Error","Error al agregar Automóvil, intente más tarde","error");
+            props.update();
+            props.onHide();
+        }
+
+
+       
     };
 
     const handleFileChange = (e) => {
@@ -168,5 +194,9 @@ function AddRental(props) {
         </Modal>
     );
 }
+
+const swAlert = (header,msg,icon) => {
+    Swal.fire(header,msg,icon);
+};
 
 export default AddRental;

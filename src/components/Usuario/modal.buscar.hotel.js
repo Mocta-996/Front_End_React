@@ -13,6 +13,8 @@ import {
 import ModalReservar from "./modal.reservar.js";
 import ModalResenia from "./modal.view.js";
 import "./Usuario.css";
+import Swal from "sweetalert2";
+import axios from "axios";
 
 function BuscarHotel(props) {
     const [search, setSearch] = useState("");
@@ -22,6 +24,10 @@ function BuscarHotel(props) {
     const [showModalReservar, setShowModalReservar] = useState(false);
     const [showModalResenia,setShowModalResenia] = useState(false);
     const [dataHotel, setDataHotel] = useState({});
+    const [rangemin, setRangemin] = useState(0);
+    const [rangemax, setRangemax] = useState(1000);
+    const [datemin, setDatemin] = useState(dateNow());
+    const [datemax, setDatemax] = useState(dateNow());
 
     const radios = [
         { name: "Pais", value: "1", variant: "outline-dark" },
@@ -42,27 +48,11 @@ function BuscarHotel(props) {
         console.log(data)
     }
 
-    /*
-    const handleSubmit = async (e) => {
-        e.preventDefault();
-        // agregar id hotel
-        room.hotel_id = props.hotel_id;
-        room.imagen = image.preview;
-        console.log(room);
-    };
-
-    const handleFileChange = (e) => {
-        const img = {
-            preview: URL.createObjectURL(e.target.files[0]),
-            data: e.target.files[0],
-        };
-        setImage(img);
-    };*/
     const handleChange = (e) => {
         setSearch(e.target.value);
         filtrar(e.target.value);
     };
-
+ 
     const filtrar = (terminosearch) => {
         var resultadossearch = tableHotel.filter((elemento) => {
             if (radioValue === "1") {
@@ -81,20 +71,37 @@ function BuscarHotel(props) {
                 ) {
                     return elemento;
                 }
-            } /*
-            else {
-                if (elemento.color.toLowerCase().includes(terminosearch.toLowerCase())) {
+            } else if (radioValue === "3") {
+                return elemento.capacidad <= terminosearch;
+            }
+            else if (radioValue === "4") {
+                return elemento.precio >= rangemin && elemento.precio <= rangemax;
+            }
+            else if (radioValue === "5") {
+                var date_service = new Date(elemento.fecha_disponibilidad);
+                var startDate = new Date(datemin);
+                var endDate = new Date( datemax);
+                if (date_service  >= startDate && date_service  <= endDate) {
                     return elemento;
                 }
-            }*/
+            }
         });
-        //console.log(resultadossearch);
         setHotel(resultadossearch);
     };
     useEffect(() => {
-        setHotel(data);
-        setTableHotel(data);
+        handlerData();
     }, []);
+
+    const handlerData = async () => {
+        try{
+            const res= await axios.get(" http://35.239.122.121:4000/api/fulltrip/v1/hotel/rooms");
+            setHotel(res.data.data);
+            setTableHotel(res.data.data);
+          }catch(ex){
+            console.log(ex);
+            Error();
+          }
+    };
 
     return (
         <Modal
@@ -115,12 +122,98 @@ function BuscarHotel(props) {
                 </Col>
                 <Col md="auto">
                     <br />
-                    <input
-                        className="form-control"
-                        value={search}
-                        placeholder="Buscar"
-                        onChange={handleChange}
-                    />
+                    {(() => {
+                        switch (radioValue) {
+                            case "3":
+                                return (
+                                    <input
+                                    className="form-control"
+                                    value={search}
+                                    placeholder="Cantidad de Personas"
+                                    type = "number"
+                                    onChange={handleChange}
+                                />
+                                );
+                            case "4":
+                                return (
+                                    <Row>
+                                        <Col>
+                                            <input
+                                                className="form-control"
+                                                value={rangemin}
+                                                placeholder="Precio minimo"
+                                                type="number"
+                                                onChange={(e) => {setRangemin(e.target.value)}}
+                                            />
+                                        </Col>
+                                        <Col>
+                                            <input
+                                                className="form-control"
+                                                value={rangemax}
+                                                placeholder="Precio maximo"
+                                                type="number"
+                                                onChange={(e) => {setRangemax(e.target.value)}}
+                                            />
+                                        </Col>
+                                        <Col>
+                                            <Button
+                                                variant="outline-dark"
+                                                onClick={() => {
+                                                    filtrar(0);
+                                                }}
+                                            >
+                                                Buscar
+                                            </Button>
+
+                                        </Col>
+                                    </Row>
+                                );
+                            case "5":
+                                return (
+                                    <Row>
+                                    <Col>
+                                        <input
+                                            className="form-control"
+                                            value={datemin}
+                                            placeholder="Precio minimo"
+                                            type="date"
+                                            onChange={(e) => {setDatemin(e.target.value)}}
+                                        />
+                                    </Col>
+                                    <Col>
+                                        <input
+                                            className="form-control"
+                                            value={datemax}
+                                            placeholder="Precio maximo"
+                                            type="date"
+                                            onChange={(e) => {setDatemax(e.target.value)}}
+                                        />
+                                    </Col>
+                                    <Col>
+                                        <Button
+                                            variant="outline-dark"
+                                            onClick={() => {
+                                                filtrar(0);
+                                            }}
+                                        >
+                                            Buscar
+                                        </Button>
+
+                                    </Col>
+                                </Row>
+                                );
+                            default:
+                                return (
+                                    <input
+                                    className="form-control"
+                                    value={search}
+                                    placeholder="Buscar"
+                                    onChange={handleChange}
+                                />
+                                );
+                        }
+                    })()}
+                    
                     <br />
                     <ButtonGroup>
                         {radios.map((radio, idx) => (
@@ -149,12 +242,13 @@ function BuscarHotel(props) {
                         <Card border="dark">
                             <Card.Img variant="top" src={tab.imagen} />
                             <Card.Body>
-                                <Card.Title>Habitación {tab.numero}</Card.Title>
+                                <Card.Title>{tab.nombre_hotel}</Card.Title>
                                 <Card.Text>
+
                                     {tab.descripcion}
                                     <br />
-                                    <b> Cantidad Disponible: </b>{" "}
-                                    {tab.cantidad_disponible}
+                                    <b> Capacidad: </b>{" "}
+                                    {tab.capacidad} Personas
                                     <br />
                                     <b> Precio: </b> {tab.precio}
                                     <br />
@@ -169,11 +263,11 @@ function BuscarHotel(props) {
                                     variant="dark"
                                     onClick={() => showModal(tab)}
                                 >
-                                    <ion-icon name="add-circle"></ion-icon>
+                                    Reservar 
                                 </Button>
                                 {"  "} 
                                 <Button variant="dark" onClick={() => showModalRes(tab)}>
-                                    <ion-icon name="eye"></ion-icon>
+                                    Ver Reseñas 
                                 </Button>
                             </Card.Body>
                         </Card>
@@ -186,7 +280,7 @@ function BuscarHotel(props) {
                     show={showModalReservar}
                     onHide={() => setShowModalReservar(false)}
                     data={dataHotel}
-                    showoption={1}
+                    showoption={parseInt(radioValue)}
                 />
 
                 {/* VER SERVICIO */}
@@ -194,7 +288,7 @@ function BuscarHotel(props) {
                     show={showModalResenia}
                     onHide={() => setShowModalResenia(false)}
                     data={dataHotel}
-                    showoption={1}
+                    showoption={parseInt(radioValue)}
                 />
             </Modal.Body>
         </Modal>
@@ -248,4 +342,15 @@ const data = [
 ];
 
 
+const dateNow =() => {
+    let date = new Date();
+    let year = date.getFullYear();
+    let month = date.getMonth() + 1;
+    let dt = date.getDate();
+    parseInt(dt) < 10 ? (dt = "0" + dt) : (dt = dt);
+    return year + "-" + month + "-" + dt;
+}
+const Error = () => {
+    Swal.fire("Error","Ocurrio un problema, intente más tarde", "error");
+};
 export default BuscarHotel;
