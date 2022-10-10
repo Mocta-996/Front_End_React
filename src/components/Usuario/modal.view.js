@@ -1,9 +1,6 @@
 import React from "react";
 import { useState, useEffect } from "react";
-import {
-    Modal,
-    Card
-} from "react-bootstrap";
+import { Modal, Card } from "react-bootstrap";
 import RatingStart from "../Rating/Start.js";
 
 function Resenia(props) {
@@ -12,10 +9,25 @@ function Resenia(props) {
     const [dataresenia, setDataResenia] = useState([]);
 
     useEffect(() => {
-        console.log(props);
         setOption(props.showoption);
         setDataResenia(resenia);
+        handlerData();
+        console.log(props);
     }, []);
+
+    const handlerData = async () => {
+        if (option == 1) {
+            try {
+                const id_ = { id_habitacion: props.data.id_habitacion };
+                console.log(id_);
+                //const res= await axios.post("http://35.239.122.121:4000/api/fulltrip/v1/hotel/getData",{info:JSON.stringify(id_)});
+                //setDataHotel(res.data.data);
+            } catch (ex) {
+                console.log(ex);
+                Error();
+            }
+        }
+    };
 
     return (
         <Modal
@@ -32,12 +44,18 @@ function Resenia(props) {
                             return (
                                 <>
                                     <Modal.Title id="contained-modal-title-vcenter ">
-                                       Reseñas
+                                        Reseñas
                                     </Modal.Title>
                                 </>
                             );
                         default:
-                            return null;
+                            return (
+                                <>
+                                    <Modal.Title id="contained-modal-title-vcenter ">
+                                        Reseñas
+                                    </Modal.Title>
+                                </>
+                            );
                     }
                 })()}
             </Modal.Header>
@@ -48,22 +66,129 @@ function Resenia(props) {
                         case 1:
                             return (
                                 <>
-                                    <h2> Habitacion 1</h2>
+                                    <Card border="dark">
+                                        <Card.Img
+                                            variant="top"
+                                            src={props.data.imagen}
+                                        />
+                                        <Card.Body>
+                                            <Card.Title>
+                                                {props.data.nombre_hotel}
+                                            </Card.Title>
+                                            <Card.Text>
+                                                <b> Habitación: </b> <br />
+                                                {props.data.descripcion}
+                                            </Card.Text>
+                                        </Card.Body>
+                                    </Card>
                                     {dataresenia.map((res, index) => (
-                                       <div className="bodydiv" key={index}>
-                                        <Card  border="dark" >
-                                            <Card.Header>
-                                                {res.usuario}
-                                            </Card.Header>
-                                            <Card.Body>
-                                                <Card.Title>
-                                                <RatingStart stars={res.calificacion} />
-                                                </Card.Title>
-                                                <Card.Text>
-                                                    {res.resenia}
-                                                </Card.Text>
-                                            </Card.Body>
-                                        </Card>
+                                        <div className="bodydiv" key={index}>
+                                            <Card border="dark">
+                                                <Card.Header>
+                                                    {res.usuario}
+                                                </Card.Header>
+                                                <Card.Body>
+                                                    <Card.Title>
+                                                        <RatingStart
+                                                            stars={
+                                                                res.calificacion
+                                                            }
+                                                        />
+                                                    </Card.Title>
+                                                    <Card.Text>
+                                                        {res.resenia}
+                                                    </Card.Text>
+                                                </Card.Body>
+                                            </Card>
+                                        </div>
+                                    ))}
+                                </>
+                            );
+                        case 2:
+                            return (
+                                <>
+                                    <Card border="dark">
+                                        <Card.Img
+                                            variant="top"
+                                            src={props.data.imagen}
+                                        />
+                                        <Card.Body>
+                                            <Card.Title>
+                                                {props.data.marca} -
+                                                {props.data.modelo}
+                                            </Card.Title>
+                                            <Card.Text>
+                                                <b> Estado: </b> <br />
+                                                {props.data.estado}
+                                                <br />
+                                                <b> Precio: $ </b>
+                                                {props.data.precio}
+                                            </Card.Text>
+                                        </Card.Body>
+                                    </Card>
+                                    {dataresenia.map((res, index) => (
+                                        <div className="bodydiv" key={index}>
+                                            <Card border="dark">
+                                                <Card.Header>
+                                                    {res.usuario}
+                                                </Card.Header>
+                                                <Card.Body>
+                                                    <Card.Title>
+                                                        <RatingStart
+                                                            stars={
+                                                                res.calificacion
+                                                            }
+                                                        />
+                                                    </Card.Title>
+                                                    <Card.Text>
+                                                        {res.resenia}
+                                                    </Card.Text>
+                                                </Card.Body>
+                                            </Card>
+                                        </div>
+                                    ))}
+                                </>
+                            );
+                        case 3:
+                            return (
+                                <>
+                                    <Card border="dark">
+                                        <Card.Img
+                                            variant="top"
+                                            src={props.data.imagen}
+                                        />
+                                        <Card.Body>
+                                            <Card.Title>
+                                                {props.data.nombre_aerolinea} 
+                                            </Card.Title>
+                                            <Card.Text>
+                                                <b> Destino: </b> <br />
+                                                {props.data.Destino}
+                                                <br />
+                                                <b> Precio: $ </b>
+                                                {props.data.precio}
+                                            </Card.Text>
+                                        </Card.Body>
+                                    </Card>
+                                    {dataresenia.map((res, index) => (
+                                        <div className="bodydiv" key={index}>
+                                            <Card border="dark">
+                                                <Card.Header>
+                                                    {res.usuario}
+                                                </Card.Header>
+                                                <Card.Body>
+                                                    <Card.Title>
+                                                        <RatingStart
+                                                            stars={
+                                                                res.calificacion
+                                                            }
+                                                        />
+                                                    </Card.Title>
+                                                    <Card.Text>
+                                                        {res.resenia}
+                                                    </Card.Text>
+                                                </Card.Body>
+                                            </Card>
                                         </div>
                                     ))}
                                 </>

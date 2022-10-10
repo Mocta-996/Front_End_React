@@ -10,14 +10,23 @@ import Card from "react-bootstrap/Card";
 import img from "../../images/image1.jpg";
 import Swal from "sweetalert2";
 import axios from "axios";
+import ModalResenia from "../Usuario/modal.view.js";
 
 function Aerolinea(props) {
     const [showModal, setShowModal] = useState(false);
     const [dataAirline, setDataAirline] = useState([]);
+    const [showModalResenia,setShowModalResenia] = useState(false);
+    const [data_vuelo,setData_vuelo] = useState(null);
 
     useEffect(() => {
         handlerData();
     }, []);
+
+    const showModalRes = (data) => {
+        setShowModalResenia(true);
+        setData_vuelo(data);
+        console.log(data)
+    }
 
     const handlerData = async () => {
         try{
@@ -72,16 +81,9 @@ function Aerolinea(props) {
                                     {tab.tipo_vuelo}
 
                                 </Card.Text>
-                                <Button variant="dark">
-                                    <ion-icon name="create-sharp"></ion-icon>
-                                </Button>
-                                {"  "}
-                                <Button
-                                    variant="danger"
-                                    onClick={() => questionDelete(tab.id_vuelo)}
-                                >
-                                    <ion-icon name="trash-sharp"></ion-icon>
-                                </Button>
+                                <Button variant="dark" onClick={() => showModalRes(tab)} >
+                                        Ver Reseñas 
+                                    </Button>
                             </Card.Body>
                         </Card>
                     </Col>
@@ -93,6 +95,15 @@ function Aerolinea(props) {
                     onHide={() => setShowModal(false)}
                     airline_id={props.airline_id}
                     update={handlerData}
+                />
+            </Row>
+
+            <Row>
+            <ModalResenia
+                    show={showModalResenia}
+                    onHide={() => setShowModalResenia(false)}
+                    data={data_vuelo}
+                    showoption={1}
                 />
             </Row>
         </Container>

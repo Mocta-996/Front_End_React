@@ -9,7 +9,6 @@ import {
     ToggleButton,
     Card,
 } from "react-bootstrap";
-
 import ModalReservar from "./modal.reservar.js";
 import ModalResenia from "./modal.view.js";
 import "./Usuario.css";
@@ -28,7 +27,7 @@ function BuscarHotel(props) {
     const [rangemax, setRangemax] = useState(1000);
     const [datemin, setDatemin] = useState(dateNow());
     const [datemax, setDatemax] = useState(dateNow());
-
+    
     const radios = [
         { name: "Pais", value: "1", variant: "outline-dark" },
         { name: "Ciudad", value: "2", variant: "outline-dark" },
@@ -78,12 +77,15 @@ function BuscarHotel(props) {
                 return elemento.precio >= rangemin && elemento.precio <= rangemax;
             }
             else if (radioValue === "5") {
-                var date_service = new Date(elemento.fecha_disponibilidad);
+                //handlerSearch();
+                /*var date_service = new Date(elemento.fecha_disponibilidad);
                 var startDate = new Date(datemin);
                 var endDate = new Date( datemax);
+                
                 if (date_service  >= startDate && date_service  <= endDate) {
                     return elemento;
-                }
+                }*/
+                //setHotel(handlerSearch());
             }
         });
         setHotel(resultadossearch);
@@ -94,7 +96,7 @@ function BuscarHotel(props) {
 
     const handlerData = async () => {
         try{
-            const res= await axios.get(" http://35.239.122.121:4000/api/fulltrip/v1/hotel/rooms");
+            const res= await axios.post(" http://35.239.122.121:4000/api/fulltrip/v1/hotel/rooms",{info:JSON.stringify("")});
             setHotel(res.data.data);
             setTableHotel(res.data.data);
           }catch(ex){
@@ -102,6 +104,21 @@ function BuscarHotel(props) {
             Error();
           }
     };
+
+    const handlerSearch = async () => {
+        try{
+            const dates = {fecha_inicio:datemin, fecha_final:datemax};
+            console.log("dates",dates)
+            const res= await axios.post(" http://35.239.122.121:4000/api/fulltrip/v1/hotel/rooms",{info:JSON.stringify(dates)});
+            return res.data.data;
+            setHotel(res.data.data);
+            //console.log(res)
+          }catch(ex){
+            console.log(ex);
+            Error();
+          }
+    };
+
 
     return (
         <Modal
@@ -193,7 +210,7 @@ function BuscarHotel(props) {
                                         <Button
                                             variant="outline-dark"
                                             onClick={() => {
-                                                filtrar(0);
+                                                handlerSearch();
                                             }}
                                         >
                                             Buscar
@@ -250,6 +267,9 @@ function BuscarHotel(props) {
                                     <b> Capacidad: </b>{" "}
                                     {tab.capacidad} Personas
                                     <br />
+                                    <b> Cantidad disponible: </b>{" "}
+                                    {tab.cantidad_disponible} Habitaciones
+                                    <br />
                                     <b> Precio: </b> {tab.precio}
                                     <br />
                                     <b> Fecha Disponibilidad: </b>{" "}
@@ -258,6 +278,8 @@ function BuscarHotel(props) {
                                     <b> País: </b> {tab.pais}
                                     <br />
                                     <b> Ciudad: </b> {tab.ciudad}
+                                    <br />
+                               
                                 </Card.Text>
                                 <Button
                                     variant="dark"
@@ -281,6 +303,7 @@ function BuscarHotel(props) {
                     onHide={() => setShowModalReservar(false)}
                     data={dataHotel}
                     showoption={parseInt(radioValue)}
+                    userdata = {props.userdata}
                 />
 
                 {/* VER SERVICIO */}

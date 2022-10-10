@@ -10,6 +10,7 @@ import "./Hotel.css";
 import axios from "axios";
 import Swal from "sweetalert2";
 
+
 function AddRoom(props) {
     const [room, setRoom] = useState({
         capacidad: "",
@@ -20,7 +21,6 @@ function AddRoom(props) {
         hotel_id: "",
     });
     const [image, setImage] = useState({ preview: "", data: "" });
-
     const [showError, setShowError] = useState(false);
     const [showAlertSucces, setShowAlertSucces] = useState(false);
 

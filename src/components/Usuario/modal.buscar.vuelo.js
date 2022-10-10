@@ -16,7 +16,7 @@ import "./Usuario.css";
 import Swal from "sweetalert2";
 import axios from "axios";
 
-function BuscarAuto(props) {
+function BuscarVuelo(props) {
     const [search, setSearch] = useState("");
     const [auto, setAuto] = useState([]);
     const [tableAuto, setTableAuto] = useState([]);
@@ -28,12 +28,10 @@ function BuscarAuto(props) {
     const [rangemax, setRangemax] = useState(1000);
 
     const radios = [
-        { name: "Marca", value: "1", variant: "outline-dark" },
-        { name: "Modelo", value: "2", variant: "outline-dark" },
-        { name: "Rango precios", value: "3", variant: "outline-dark" }
+        { name: "Destino", value: "1", variant: "outline-dark" },
+        { name: "Rango precios", value: "2", variant: "outline-dark" }
     ];
     const showModal = (data) => {
-        
         setDataAuto(data);
         console.log(data);
         setShowModalReservar(true);
@@ -53,17 +51,7 @@ function BuscarAuto(props) {
         var resultadossearch = tableAuto.filter((elemento) => {
             if (radioValue === "1") {
                 if (
-                    elemento.marca
-                        .toLowerCase()
-                        .includes(terminosearch.toLowerCase())
-                ) {
-                    return elemento;
-                }
-            } else if (radioValue === "2") {
-                if (
-                    elemento.modelo
-                        .toLowerCase()
-                        .includes(terminosearch.toLowerCase())
+                    elemento.Destino.toLowerCase().includes(terminosearch.toLowerCase())
                 ) {
                     return elemento;
                 }
@@ -76,7 +64,7 @@ function BuscarAuto(props) {
 
     const handlerData = async () => {
         try{
-            const res= await axios.get("http://35.239.122.121:4000/api/fulltrip/v1/rentaautos/cars");
+            const res= await axios.get("http://35.239.122.121:4000/api/fulltrip/v1/aerolinea/flights");
             console.log(res.data.data)
             setAuto(res.data.data);
             setTableAuto(res.data.data);
@@ -101,7 +89,7 @@ function BuscarAuto(props) {
         >
             <Modal.Header closeButton className="bodymodal">
                 <Modal.Title id="contained-modal-title-vcenter ">
-                    Buscar Automóvil
+                    Buscar Vuelo
                 </Modal.Title>
             </Modal.Header>
             <Row>
@@ -112,7 +100,7 @@ function BuscarAuto(props) {
                     <br />
                       {(() => {
                         switch (radioValue) {
-                            case "3":
+                            case "2":
                                 return (
                                     <Row>
                                         <Col>
@@ -187,18 +175,24 @@ function BuscarAuto(props) {
                         <Card border="dark">
                             <Card.Img variant="top" src={tab.imagen} />
                             <Card.Body>
-                                <Card.Title> {tab.marca} {"  "} {tab.modelo}</Card.Title>
+                                
+                                <Card.Title> Aerolínea {tab.nombre_aerolinea}</Card.Title>
                                 <Card.Text>
-                                    <b> Estado: </b>{" "}
-                                    {tab.estado}
+                                    <b> Destino: </b>{" "}
+                                    {tab.Destino}
                                     <br />
-                                    <b> Placa: </b>{" "}
-                                    {tab.placa}
+                                    <b> Boletos Disponibles: </b>{" "}
+                                    {tab.Disponibles}
+                                    <br />
+                                    <b> Fecha de Salida: </b>{" "}
+                                    {tab.fecha_salida}
                                     <br />
                                     <b> Precio: $ </b> {tab.precio}
                                     <br />
+                                    <b> Tipo:</b> {tab.tipo}
+                                    <br />
                                 </Card.Text>
-                               {tab.estado === "Disponible" ? ( 
+                               {tab.Disponibles > 0 ? ( 
                                     <>
                                     <Button
                                         variant="dark"
@@ -237,7 +231,7 @@ function BuscarAuto(props) {
                     show={showModalReservar}
                     onHide={() => setShowModalReservar(false)}
                     data={dataAuto}
-                    showoption={2}
+                    showoption={3}
                     userdata = {props.userdata}
                 />
 
@@ -246,44 +240,12 @@ function BuscarAuto(props) {
                     show={showModalResenia}
                     onHide={() => setShowModalResenia(false)}
                     data={dataAuto}
-                    showoption={2}
+                    showoption={3}
                 />
             </Modal.Body>
         </Modal>
     );
 }
-const data = [
-    {
-        marca:"toyota",
-        placa: "1234",
-        modelo: "yaris",
-        precio:100,
-        rental_id: 1,
-        imagen: "../../images/image1.jpg",
-        estado: "Disponible",
-        auto_id: 1
-    },
-    {
-        marca:"toyota",
-        placa: "1234",
-        modelo: "yaris",
-        precio:100,
-        rental_id: 1,
-        imagen: "../../images/image1.jpg",
-        estado: "No Disponible",
-        auto_id: 1
-    },
-    {
-        marca:"toyota",
-        placa: "1234",
-        modelo: "yaris",
-        precio:100,
-        rental_id: 1,
-        imagen: "../../images/image1.jpg",
-        estado: "Disponible",
-        auto_id: 1
-    }
-];
 
 
-export default BuscarAuto;
+export default BuscarVuelo;

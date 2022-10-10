@@ -10,14 +10,22 @@ import Card from "react-bootstrap/Card";
 import img from "../../images/image1.jpg";
 import Swal from "sweetalert2";
 import axios from "axios";
+import ModalResenia from "../Usuario/modal.view.js";
 
 function Auto(props) {
     const [showModal, setShowModal] = useState(false);
     const [dataRental, setDataRental] = useState([]);
+    const [showModalResenia,setShowModalResenia] = useState(false);
+    const [data_rental,setData_Rental] = useState(null);
 
     useEffect(() => {
         handlerData();
     }, []);
+    const showModalRes = (data) => {
+        setShowModalResenia(true);
+        setData_Rental(data);
+        console.log(data)
+    }
 
     const handlerData = async () => {
         try{
@@ -48,7 +56,7 @@ function Auto(props) {
                 <Col xs={2} md={4}></Col>
             </Row>
             <Row>
-                <h2>Rental :   {props.name_rental}</h2>
+                <h4>Rental :   <b> {props.name_rental} </b> </h4>
                 <br/>
                 <br/>
             </Row>
@@ -69,15 +77,8 @@ function Auto(props) {
                                     <b> Estado: </b>{" "}
                                     {tab.estado}
                                 </Card.Text>
-                                <Button variant="dark">
-                                    <ion-icon name="create-sharp"></ion-icon>
-                                </Button>
-                                {"  "}
-                                <Button
-                                    variant="danger"
-                                    onClick={() => questionDelete(tab.auto_id)}
-                                >
-                                    <ion-icon name="trash-sharp"></ion-icon>
+                                <Button variant="dark" onClick={() => showModalRes(tab)} >
+                                    Ver Reseñas 
                                 </Button>
                             </Card.Body>
                         </Card>
@@ -92,6 +93,15 @@ function Auto(props) {
                     update={handlerData}
                 />
             </Row>
+            <Row>
+            <ModalResenia
+                    show={showModalResenia}
+                    onHide={() => setShowModalResenia(false)}
+                    data={data_rental}
+                    showoption={2}
+                />
+            </Row>
+
         </Container>
     );
 }

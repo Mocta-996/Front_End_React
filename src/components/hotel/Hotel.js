@@ -10,14 +10,22 @@ import Card from "react-bootstrap/Card";
 import img from "../../images/image1.jpg";
 import Swal from "sweetalert2";
 import axios from "axios";
-
+import ModalResenia from "../Usuario/modal.view.js";
 function Hotel(props) {
     const [showModal, setShowModal] = useState(false);
     const [dataHotel, setDataHotel] = useState([]);
+    const [showModalResenia,setShowModalResenia] = useState(false);
+    const [data_hotel,setData_hotel] = useState(null);
 
     useEffect(() => {
         handlerData();
     }, []);
+    const showModalRes = (data) => {
+        setShowModalResenia(true);
+        setData_hotel(data);
+        console.log(data)
+    }
+
 
     const handlerData = async () => {
         try{
@@ -46,7 +54,7 @@ function Hotel(props) {
                 <Col xs={2} md={4}></Col>
             </Row>
             <Row>
-                <h2>Servicios del hotel: {props.name_hotel}</h2>
+                <h4>Servicios del hotel: <b> {props.name_hotel} </b></h4>  
                 <br/>
                 <br/>
             </Row>
@@ -68,16 +76,9 @@ function Hotel(props) {
                                     <b> Fecha Disponibilidad: </b>{" "}
                                     {tab.fecha_disponibilidad}
                                 </Card.Text>
-                                <Button variant="dark">
-                                    <ion-icon name="create-sharp"></ion-icon>
-                                </Button>
-                                {"  "}
-                                <Button
-                                    variant="danger"
-                                    onClick={() => questionDelete(tab.id_habitacion)}
-                                >
-                                    <ion-icon name="trash-sharp"></ion-icon>
-                                </Button>
+                                    <Button variant="dark" onClick={() => showModalRes(tab)} >
+                                        Ver Reseñas 
+                                    </Button>
                             </Card.Body>
                         </Card>
                     </Col>
@@ -89,6 +90,14 @@ function Hotel(props) {
                     onHide={() => setShowModal(false)}
                     hotel_id={props.hotel_id}
                     update={handlerData}
+                />
+            </Row>
+            <Row>
+            <ModalResenia
+                    show={showModalResenia}
+                    onHide={() => setShowModalResenia(false)}
+                    data={data_hotel}
+                    showoption={1}
                 />
             </Row>
         </Container>
