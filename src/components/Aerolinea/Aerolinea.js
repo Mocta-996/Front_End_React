@@ -25,16 +25,16 @@ function Aerolinea(props) {
     const showModalRes = (data) => {
         setShowModalResenia(true);
         setData_vuelo(data);
-        console.log(data)
+      
     }
 
     const handlerData = async () => {
         try{
             const id_ = {id_aerolinea:props.airline_id};
-            console.log("id",id_)
+           
             const res= await axios.post("http://35.239.122.121:4000/api/fulltrip/v1/aerolinea/getData",{info:JSON.stringify(id_)});
             setDataAirline(res.data.data);
-            console.log("res",res)
+           
           }catch(ex){
             console.log(ex);
             Error();
@@ -57,7 +57,7 @@ function Aerolinea(props) {
                 <Col xs={2} md={4}></Col>
             </Row>
             <Row>
-                <h2>Aerolínea : aqui va el nombre de la aerolinea</h2>
+                <h2>Aerolínea : <b> {props.name_airline}  </b> </h2>
                 <br/>
                 <br/>
             </Row>
@@ -90,21 +90,24 @@ function Aerolinea(props) {
                 ))}
             </Row>
             <Row>
-                <ModalAerolinea
+                {showModal ? ( <ModalAerolinea
                     show={showModal}
                     onHide={() => setShowModal(false)}
                     airline_id={props.airline_id}
                     update={handlerData}
-                />
+                />):null}
+               
             </Row>
 
             <Row>
-            <ModalResenia
-                    show={showModalResenia}
-                    onHide={() => setShowModalResenia(false)}
-                    data={data_vuelo}
-                    showoption={1}
-                />
+                    {
+                        showModalResenia ? ( <ModalResenia
+                            show={showModalResenia}
+                            onHide={() => setShowModalResenia(false)}
+                            data={data_vuelo}
+                            showoption={3}
+                        />):null
+                    }
             </Row>
         </Container>
     );

@@ -24,12 +24,25 @@ function AgregarResenia(props) {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
-        console.log(props);
+       
         dataRating.id_service= props.dataService;
         dataRating.id_usuario= props.userdata.id_user;
         dataRating.tipoServicio= props.option;
-        console.log(dataRating);
+       
+        try{
+            const res= await axios.post("http://35.239.122.121:4000/api/fulltrip/v1/main/addReview",{info:JSON.stringify(dataRating)});
+           
+            showAlert("Agregado",res.data.msg,"success");
+            props.onHide();
+            props.updateDashboard();
+          }catch(ex){
+            console.log(ex);
+            showAlert("Error","No se pudo agregar la reseña","error");
+          }
+
     };
+
+
 
     /*useEffect(() => {
         setOption(props.option            );

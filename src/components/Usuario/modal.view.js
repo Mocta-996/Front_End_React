@@ -7,27 +7,18 @@ function Resenia(props) {
     const [option, setOption] = useState(0);
     const [dataHotel, setDataHotel] = useState({});
     const [dataresenia, setDataResenia] = useState([]);
-
+    
+    console.log("props",props)
     useEffect(() => {
         setOption(props.showoption);
-        setDataResenia(resenia);
-        handlerData();
-        console.log(props);
+        console.log(props)
+        if(Object.entries(props.data).length != 0){
+            setDataResenia(props.data.resenias); 
+        }
+        
     }, []);
 
-    const handlerData = async () => {
-        if (option == 1) {
-            try {
-                const id_ = { id_habitacion: props.data.id_habitacion };
-                console.log(id_);
-                //const res= await axios.post("http://35.239.122.121:4000/api/fulltrip/v1/hotel/getData",{info:JSON.stringify(id_)});
-                //setDataHotel(res.data.data);
-            } catch (ex) {
-                console.log(ex);
-                Error();
-            }
-        }
-    };
+   
 
     return (
         <Modal
@@ -81,7 +72,7 @@ function Resenia(props) {
                                             </Card.Text>
                                         </Card.Body>
                                     </Card>
-                                    {dataresenia.map((res, index) => (
+                                    {props.data.resenias && props.data.resenias.map((res, index) => (
                                         <div className="bodydiv" key={index}>
                                             <Card border="dark">
                                                 <Card.Header>
@@ -126,7 +117,7 @@ function Resenia(props) {
                                             </Card.Text>
                                         </Card.Body>
                                     </Card>
-                                    {dataresenia.map((res, index) => (
+                                    {props.data.resenias && props.data.resenias.map((res, index) => (
                                         <div className="bodydiv" key={index}>
                                             <Card border="dark">
                                                 <Card.Header>
@@ -136,7 +127,7 @@ function Resenia(props) {
                                                     <Card.Title>
                                                         <RatingStart
                                                             stars={
-                                                                res.calificacion
+                                                                res.calificaicon
                                                             }
                                                         />
                                                     </Card.Title>
@@ -170,7 +161,7 @@ function Resenia(props) {
                                             </Card.Text>
                                         </Card.Body>
                                     </Card>
-                                    {dataresenia.map((res, index) => (
+                                    {props.data.resenias && props.data.resenias.map((res, index) => (
                                         <div className="bodydiv" key={index}>
                                             <Card border="dark">
                                                 <Card.Header>

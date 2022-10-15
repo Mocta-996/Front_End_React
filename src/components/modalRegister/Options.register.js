@@ -65,7 +65,7 @@ function OptionsRegister(props) {
         e.preventDefault();
         switch (option) {
             case 1:
-                console.log(userdata);
+               
                 // verificar que las contraseñas sean iguales
                 if (userdata.pass1 !== userdata.pass2) {
                     setShowAlert(true);
@@ -89,7 +89,7 @@ function OptionsRegister(props) {
                             }),
                         }
                     );
-                    console.log(res);
+                
                     Error(
                         "Agrergado",
                         `${res.data.msg}  ,Inicie Sesión`,
@@ -103,14 +103,14 @@ function OptionsRegister(props) {
                 break;
 
             case 2:
-                console.log(hoteldata);
+              
                 // registrar usuario
                 try {
                     const res = await axios.post(
                         "http://35.239.122.121:4000/api/fulltrip/v1/main/registro",
                         { info: JSON.stringify(hoteldata) }
                     );
-                    console.log(res);
+                  
                     Error(
                         "Agrergado",
                         `${res.data.msg}  ,Inicie Sesión`,
@@ -123,13 +123,13 @@ function OptionsRegister(props) {
                 }
                 break;
             case 3:
-                console.log(rentalsdata);
+                
                 try {
                     const res = await axios.post(
                         "http://35.239.122.121:4000/api/fulltrip/v1/main/registro",
                         { info: JSON.stringify(rentalsdata) }
                     );
-                    console.log(res);
+                 
                     Error(
                         "Agrergado",
                         `${res.data.msg}  ,Inicie Sesión`,
@@ -143,14 +143,13 @@ function OptionsRegister(props) {
 
                 break;
             case 4:
-                console.log(airlinedata);
 
                 try {
                     const res = await axios.post(
                         "http://35.239.122.121:4000/api/fulltrip/v1/main/registro",
                         { info: JSON.stringify(airlinedata) }
                     );
-                    console.log(res);
+                   
                     Error(
                         "Agrergado",
                         `${res.data.msg}  ,Inicie Sesión`,

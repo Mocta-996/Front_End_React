@@ -14,8 +14,10 @@ import ModalHotel from "./modal.buscar.hotel.js";
 import ModalAuto from "./modal.buscar.auto.js";
 import ModalResenia from "./modal.resenia.js";
 import ModalVuelo from "./modal.buscar.vuelo.js";
+import ModalReseniaUser from "./modal.resenia.user.js";
 import axios from "axios";
 import "./Usuario.css";
+
 
 function Usuario(props) {
     const [showModal, setShowModal] = useState(false);
@@ -23,17 +25,25 @@ function Usuario(props) {
     const [showModalResenia, setShowModalResenia] = useState(false);
     const [showModalVuelo, setShowModalVuelo] = useState(false);
     const [dataService, setDataService] = useState(null);
+    const [dataDashboard, setDataDashboard] = useState({
+        hotel: [],
+        auto: [],
+        vuelo: []
+    });
     const [option,setOption] = useState(0);
-    useEffect(() => {
-        handlerData();
-    }, []);
+    const [ratingService, setRatingService] = useState({usuario:"",resenia:"",calificaicon:0});
+    const [showRatinService, setShowRatingService] = useState(false);
 
+   
     const handlerData = async () => {
         try {
             // obtener servicios del cliente
-            const id_User = { id_user: props.userdata.id_user };
-            console.log(id_User);
-            //const res= await axios.post(" http://35.239.122.121:4000/api/fulltrip/v1/hotel/rooms");
+            const id_User = { id_usuario: props.userdata.id_user };
+           
+            const res= await axios.post("http://35.239.122.121:4000/api/fulltrip/v1/main/dashboard",{info:JSON.stringify(id_User)});
+           
+            setDataDashboard(res.data);
+            //console.log(dataDashboard);
             //setHotel(res.data.data);
             //setTableHotel(res.data.data);
         } catch (ex) {
@@ -46,6 +56,25 @@ function Usuario(props) {
         setDataService(id);
         setShowModalResenia(true);
     };
+
+    const handlerRatingService = (option) => {
+       
+        ratingService.usuario = option.usuario;
+        ratingService.resenia = option.resenia;
+        ratingService.calificaicon = option.calificaicon;
+        setShowRatingService(true);
+        //ratingService=e;
+        
+    };
+
+   
+
+    useEffect(() => {
+        handlerData();
+    }, []);
+
+
+
 
     return (
         <Container>
@@ -92,7 +121,7 @@ function Usuario(props) {
                 >
                     <Tab eventKey="Habitaciones" title="Habitaciones">
                         <Row xs={1} md={2} className="g-4 ">
-                            {data.hotel.map((tab, index) => (
+                            {dataDashboard.hotel.map((tab, index) => (
                                 <Col key={index} style={{ width: "17rem" }}>
                                     <Card border="dark">
                                         <Card.Img
@@ -122,7 +151,7 @@ function Usuario(props) {
                                                 <b> Pais: </b> {tab.pais}
                                                 <b> Ciudad: </b> {tab.ciudad}
                                             </Card.Text>
-                                            <Button
+                                            {tab.hasResenia === 0 ? (<Button
                                                 variant="dark"
                                                 onClick={() =>
                                                     handlerRating(
@@ -132,7 +161,14 @@ function Usuario(props) {
                                                 }
                                             >
                                                 Calificar
-                                            </Button>
+                                            </Button>):(<Button
+                                                variant="dark"
+                                                onClick={() =>
+                                                    handlerRatingService(tab.resenia)
+                                                }
+                                            >
+                                                Ver calificación
+                                            </Button>)}
                                             {"  "}
                                         </Card.Body>
                                     </Card>
@@ -140,9 +176,9 @@ function Usuario(props) {
                             ))}
                         </Row>
                     </Tab>
-                    <Tab eventKey="Autos" title="Habitaciones">
+                    <Tab eventKey="Autos" title="Autos">
                         <Row xs={1} md={2} className="g-4 ">
-                            {data.auto.map((tab, index) => (
+                            {dataDashboard.auto.map((tab, index) => (
                                 <Col key={index} style={{ width: "17rem" }}>
                                     <Card border="dark">
                                         <Card.Img
@@ -167,7 +203,7 @@ function Usuario(props) {
                                                 {tab.precio_total}
                                                 <br />
                                             </Card.Text>
-                                            <Button
+                                            {tab.hasResenia === 0 ? (<Button
                                                 variant="dark"
                                                 onClick={() =>
                                                     handlerRating(
@@ -177,7 +213,14 @@ function Usuario(props) {
                                                 }
                                             >
                                                 Calificar
-                                            </Button>
+                                            </Button>):(<Button
+                                                variant="dark"
+                                                onClick={() =>
+                                                    handlerRatingService(tab.resenia)
+                                                }
+                                            >
+                                                Ver calificación
+                                            </Button>)}
                                         </Card.Body>
                                     </Card>
                                 </Col>
@@ -186,7 +229,7 @@ function Usuario(props) {
                     </Tab>
                     <Tab eventKey="vuelos" title="Vuelos">
                         <Row xs={1} md={2} className="g-4 ">
-                            {data.vuelo.map((tab, index) => (
+                            {dataDashboard.vuelo.map((tab, index) => (
                                 <Col key={index} style={{ width: "17rem" }}>
                                     <Card border="dark">
                                         <Card.Img
@@ -218,7 +261,7 @@ function Usuario(props) {
                                                 {tab.tipo}
                                                 <br />
                                             </Card.Text>
-                                            <Button
+                                            {tab.hasResenia === 0 ? (<Button
                                                 variant="dark"
                                                 onClick={() =>
                                                     handlerRating(
@@ -228,7 +271,14 @@ function Usuario(props) {
                                                 }
                                             >
                                                 Calificar
-                                            </Button>
+                                            </Button>):(<Button
+                                                variant="dark"
+                                                onClick={() =>
+                                                    handlerRatingService(tab.resenia)
+                                                }
+                                            >
+                                                Ver calificación
+                                            </Button>)}
                                         </Card.Body>
                                     </Card>
                                 </Col>
@@ -242,11 +292,13 @@ function Usuario(props) {
                     show={showModal}
                     onHide={() => setShowModal(false)}
                     userdata={props.userdata}
+                    updateDashboard = {handlerData}
                 />
                 <ModalAuto
                     show={showModalAuto}
                     onHide={() => setShowModalAuto(false)}
                     userdata={props.userdata}
+                    updateDashboard = {handlerData}
                 />
                 <ModalResenia
                     show={showModalResenia}
@@ -254,12 +306,24 @@ function Usuario(props) {
                     userdata={props.userdata}
                     dataService={dataService}
                     option={option}
+                    updateDashboard = {handlerData}
                 />
-                <ModalVuelo
+                {
+                    showRatinService ? ( <ModalReseniaUser
+                        show={showRatinService}
+                        onHide={() => setShowRatingService(false)}
+                        data={ratingService}
+                      
+                       />):null
+                }
+               
+                {showModalVuelo ? (<ModalVuelo
                     show={showModalVuelo}
                     onHide={() => setShowModalVuelo(false)}
                     userdata={props.userdata}
-                />
+                    updateDashboard = {handlerData}
+                />):null}
+                
             </Row>
         </Container>
     );
@@ -324,20 +388,6 @@ const data = {
 };
 
 
-/*
- <Button variant="dark">
-                                    <ion-icon name="create-sharp"></ion-icon>
-                                </Button>
-                                {"  "}
-                                <Button
-                                    variant="danger"
-                                    onClick={() =>
-                                        questionDelete(tab.id_habitacion)
-                                    }
-                                >
-                                    <ion-icon name="trash-sharp"></ion-icon>
-                                </Button> */
-// eliminar habitacion
 const questionDelete = (e) => {
     const { id } = e;
     Swal.fire({

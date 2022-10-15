@@ -36,17 +36,15 @@ function AddRental(props) {
         add.append("info", JSON.stringify(auto));
 
         try {
-            console.log(add);
+       
             const res = await axios.post(
                 "http://35.239.122.121:4000/api/fulltrip/v1/rentaautos/addcar",
                 add
             );
-            console.log(res);
             swAlert("Exito","Automóvil agregada con exito","success");
             props.update();
             props.onHide();
         } catch (ex) {
-            console.log(ex);
             swAlert("Error","Error al agregar Automóvil, intente más tarde","error");
             props.update();
             props.onHide();

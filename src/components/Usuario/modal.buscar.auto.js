@@ -35,14 +35,14 @@ function BuscarAuto(props) {
     const showModal = (data) => {
         
         setDataAuto(data);
-        console.log(data);
+     
         setShowModalReservar(true);
     }
 
     const showModalRes = (data) => {
         setShowModalResenia(true);
         setDataAuto(data);
-        console.log(data)
+       
     }
     const handleChange = (e) => {
         setSearch(e.target.value);
@@ -77,7 +77,7 @@ function BuscarAuto(props) {
     const handlerData = async () => {
         try{
             const res= await axios.get("http://35.239.122.121:4000/api/fulltrip/v1/rentaautos/cars");
-            console.log(res.data.data)
+           
             setAuto(res.data.data);
             setTableAuto(res.data.data);
           }catch(ex){
@@ -239,6 +239,7 @@ function BuscarAuto(props) {
                     data={dataAuto}
                     showoption={2}
                     userdata = {props.userdata}
+                    updateDashboard = {props.updateDashboard}
                 />
 
                 {/* VER SERVICIO */}
@@ -247,6 +248,7 @@ function BuscarAuto(props) {
                     onHide={() => setShowModalResenia(false)}
                     data={dataAuto}
                     showoption={2}
+                    updateDashboard = {props.updateDashboard}
                 />
             </Modal.Body>
         </Modal>

@@ -24,16 +24,16 @@ function Auto(props) {
     const showModalRes = (data) => {
         setShowModalResenia(true);
         setData_Rental(data);
-        console.log(data)
+      
     }
 
     const handlerData = async () => {
         try{
             const id_ = {id_alquiler:props.rental_id};
-            console.log("id",id_)
+         
             const res= await axios.post("http://35.239.122.121:4000/api/fulltrip/v1/rentaautos/getData",{info:JSON.stringify(id_)});
             setDataRental(res.data.data);
-            console.log("res",res)
+           
           }catch(ex){
             console.log(ex);
             Error();
@@ -86,20 +86,22 @@ function Auto(props) {
                 ))}
             </Row>
             <Row>
-                <ModalAuto 
+                {showModal ? (<ModalAuto 
                     show={showModal}
                     onHide={() => setShowModal(false)}
                     rental_id={props.rental_id}
                     update={handlerData}
-                />
+                />):null}
+                
             </Row>
             <Row>
-            <ModalResenia
+                {showModalResenia ? (<ModalResenia
                     show={showModalResenia}
                     onHide={() => setShowModalResenia(false)}
                     data={data_rental}
                     showoption={2}
-                />
+                />):null}
+            
             </Row>
 
         </Container>

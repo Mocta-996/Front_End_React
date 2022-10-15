@@ -29,7 +29,7 @@ function OptionsLogin(props) {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try{
-            console.log(userdata)
+         
             const res= await axios.post(" http://35.239.122.121:4000/api/fulltrip/v1/main/login",{info:JSON.stringify(userdata)});
             const {data} = res
             props.onHide();
@@ -37,7 +37,7 @@ function OptionsLogin(props) {
             props.update();
             navigate("/dashboard");
           }catch(ex){
-            console.log(ex.response.data);
+          
             const {status, msg} = ex.response.data;
             if(!status){
                 Error(msg);

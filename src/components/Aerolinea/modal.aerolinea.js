@@ -30,18 +30,17 @@ function AddVuelo(props) {
         // agregar id hotel
         vuelo.aerolinea_id = props.airline_id;
         vuelo.imagen = image.data;
-        console.log(vuelo);
         const add = new FormData();
         add.append("imagen", image.data);
         add.append("info", JSON.stringify(vuelo));
 
         try {
-            console.log(add);
+           
             const res = await axios.post(
                 "http://35.239.122.121:4000/api/fulltrip/v1/aerolinea/addFlight",
                 add
             );
-            console.log(res);
+           
             swAlert("Exito","Vuelo agregado con exito","success");
             props.update();
             props.onHide();

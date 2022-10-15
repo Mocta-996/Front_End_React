@@ -27,6 +27,7 @@ function BuscarHotel(props) {
     const [rangemax, setRangemax] = useState(1000);
     const [datemin, setDatemin] = useState(dateNow());
     const [datemax, setDatemax] = useState(dateNow());
+   
     
     const radios = [
         { name: "Pais", value: "1", variant: "outline-dark" },
@@ -38,13 +39,13 @@ function BuscarHotel(props) {
     const showModal = (data) => {
         setShowModalReservar(true);
         setDataHotel(data);
-        console.log(data)
+      
     }
 
     const showModalRes = (data) => {
         setShowModalResenia(true);
         setDataHotel(data);
-        console.log(data)
+      
     }
 
     const handleChange = (e) => {
@@ -90,15 +91,14 @@ function BuscarHotel(props) {
         });
         setHotel(resultadossearch);
     };
-    useEffect(() => {
-        handlerData();
-    }, []);
+   
 
     const handlerData = async () => {
         try{
             const res= await axios.post(" http://35.239.122.121:4000/api/fulltrip/v1/hotel/rooms",{info:JSON.stringify("")});
             setHotel(res.data.data);
             setTableHotel(res.data.data);
+           
           }catch(ex){
             console.log(ex);
             Error();
@@ -108,17 +108,20 @@ function BuscarHotel(props) {
     const handlerSearch = async () => {
         try{
             const dates = {fecha_inicio:datemin, fecha_final:datemax};
-            console.log("dates",dates)
+           
             const res= await axios.post(" http://35.239.122.121:4000/api/fulltrip/v1/hotel/rooms",{info:JSON.stringify(dates)});
             return res.data.data;
             setHotel(res.data.data);
-            //console.log(res)
+           
           }catch(ex){
             console.log(ex);
             Error();
           }
     };
 
+    useEffect(() => {
+        handlerData();
+    }, []);
 
     return (
         <Modal
@@ -304,6 +307,8 @@ function BuscarHotel(props) {
                     data={dataHotel}
                     showoption={parseInt(radioValue)}
                     userdata = {props.userdata}
+                    update = {handlerData}
+                    updateDashboard = {props.updateDashboard}
                 />
 
                 {/* VER SERVICIO */}
@@ -312,6 +317,7 @@ function BuscarHotel(props) {
                     onHide={() => setShowModalResenia(false)}
                     data={dataHotel}
                     showoption={parseInt(radioValue)}
+                    updateDashboard = {props.updateDashboard}
                 />
             </Modal.Body>
         </Modal>

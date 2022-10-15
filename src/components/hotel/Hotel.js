@@ -4,6 +4,8 @@ import Button from "react-bootstrap/Button";
 import Container from "react-bootstrap/Container";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+import Tab from 'react-bootstrap/Tab';
+import Tabs from 'react-bootstrap/Tabs';
 import "./Hotel.css";
 import ModalHotel from "./modal.hotel";
 import Card from "react-bootstrap/Card";
@@ -11,6 +13,7 @@ import img from "../../images/image1.jpg";
 import Swal from "sweetalert2";
 import axios from "axios";
 import ModalResenia from "../Usuario/modal.view.js";
+import Calendar from "./calendar.js";
 function Hotel(props) {
     const [showModal, setShowModal] = useState(false);
     const [dataHotel, setDataHotel] = useState([]);
@@ -19,20 +22,22 @@ function Hotel(props) {
 
     useEffect(() => {
         handlerData();
+        console.log(props)
     }, []);
     const showModalRes = (data) => {
         setShowModalResenia(true);
         setData_hotel(data);
-        console.log(data)
+
+       
     }
 
 
     const handlerData = async () => {
         try{
             const id_ = {id_hotel:props.hotel_id};
-            console.log(id_)
             const res= await axios.post("http://35.239.122.121:4000/api/fulltrip/v1/hotel/getData",{info:JSON.stringify(id_)});
             setDataHotel(res.data.data);
+            console.log(res)
           }catch(ex){
             console.log(ex);
             Error();
@@ -58,8 +63,22 @@ function Hotel(props) {
                 <br/>
                 <br/>
             </Row>
-            <Row xs={1} md={2} className="g-4 ">
-                {dataHotel.map((tab, index) => (
+            <Row>
+            <Tabs
+                    defaultActiveKey="Habitaciones"
+                    id="fill-tab-example"
+                    className="mb-3"
+                    fill
+                >
+                    <Tab eventKey="calendario" title="Calendario">
+                        <Row  className="g-4 ">
+                            <Calendar hotel_id={props.hotel_id}/>
+                     
+                        </Row>
+                    </Tab>
+                    <Tab eventKey="Habitaciones" title="Habitaciones">
+                        <Row xs={1} md={2} className="g-4 ">
+                        {dataHotel && dataHotel.map((tab, index) => (
                     <Col key={index} style={{ width: "17rem" }}>
                         <Card border="dark">
                             <Card.Img variant="top" src={tab.imagen} />
@@ -83,22 +102,30 @@ function Hotel(props) {
                         </Card>
                     </Col>
                 ))}
+                           
+                        </Row>
+                    </Tab>
+                </Tabs>
             </Row>
             <Row>
-                <ModalHotel
+                {showModal ? (<ModalHotel
                     show={showModal}
                     onHide={() => setShowModal(false)}
                     hotel_id={props.hotel_id}
                     update={handlerData}
-                />
+                />):null}
+                
             </Row>
             <Row>
-            <ModalResenia
-                    show={showModalResenia}
-                    onHide={() => setShowModalResenia(false)}
-                    data={data_hotel}
-                    showoption={1}
-                />
+                {
+                    showModalResenia? (  <ModalResenia
+                        show={showModalResenia}
+                        onHide={() => setShowModalResenia(false)}
+                        data={data_hotel}
+                        showoption={1}
+                    />):null
+                }
+          
             </Row>
         </Container>
     );
@@ -164,4 +191,6 @@ const questionDelete = (e) => {
 const Error = () => {
     Swal.fire("Error","Ocurrio un problema, intente más tarde", "error");
 };
+   
+   
 export default Hotel;

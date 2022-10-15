@@ -44,9 +44,12 @@ function Reservar(props) {
             var date_service = new Date(props.data.fecha_disponibilidad);
             var startDate = new Date(dataHotel.startDate);
             var endDate = new Date(dataHotel.endDate);
-            if (
+            /* if (
                 startDate > date_service ||
                 endDate > date_service ||
+                startDate > endDate
+            )  */
+            if (
                 startDate > endDate
             ) {
                 showAlert(
@@ -78,6 +81,7 @@ function Reservar(props) {
             }
             dataHotel.id_usuario = props.userdata.id_user;
             dataHotel.id_habitacion = props.data.id_habitacion;
+            dataHotel.cantidad = parseInt(dataHotel.cantidad);
             console.log(dataHotel);
 
             try {
@@ -90,8 +94,9 @@ function Reservar(props) {
                     "Has reservado una habitación",
                     "success"
                 );
+                props.update();
                 props.onHide();
-                console.log(res);
+               
             } catch (ex) {
                 console.log(ex);
                 showAlert("Error", ex.response.data.msg, "error");
@@ -112,13 +117,14 @@ function Reservar(props) {
             // verificar el usuario
             dataAuto.id_usuario = props.userdata.id_user;
             dataAuto.auto_id= props.data.auto_id;
-            console.log(dataAuto);
+
+           
 
             try {
-                /*const res = await axios.post(
-                    "http://35.239.122.121:4000/api/fulltrip/v1/hotel/reserveRoom",
-                    { info: JSON.stringify(dataHotel) }
-                );*/
+                const res = await axios.post(
+                    "http://35.239.122.121:4000/api/fulltrip/v1/rentaautos/rent",
+                    { info: JSON.stringify(dataAuto) }
+                );
                 showAlert( "Reservado","Alquilaste un auto",  "success");
                 props.onHide();
                 //console.log(res);
@@ -147,14 +153,14 @@ function Reservar(props) {
                 );
                 return;
             }
-            console.log(dataVuelo);
+           
             
             try {
-                /*const res = await axios.post(
-                    "http://35.239.122.121:4000/api/fulltrip/v1/hotel/reserveRoom",
-                    { info: JSON.stringify(dataHotel) }
-                );*/
-                showAlert( "Reservado","Alquilaste un auto",  "success");
+                const res = await axios.post(
+                    "http://35.239.122.121:4000/api/fulltrip/v1/Aerolinea/reserve",
+                    { info: JSON.stringify(dataVuelo) }
+                );
+                showAlert( "Reservado","Haz reservado "+dataVuelo.cantidad_asientos +"boletos",  "success");
                 props.onHide();
                 //console.log(res);
             } catch (ex) {
@@ -164,11 +170,12 @@ function Reservar(props) {
             
         
         }
+        props.updateDashboard();
     };
 
     useEffect(() => {
         setOption(props.showoption);
-        console.log("porps",props)
+      
     }, []);
 
     return (

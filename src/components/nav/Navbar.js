@@ -30,11 +30,10 @@ function NavB() {
         if (localStorage.getItem("user")) {
             setUserlog(true);
             setUserdata(JSON.parse(localStorage.getItem("user")));
-            console.log(userdata);
-            console.log("hay un usuario logueado");
+           
+         
         } else {
             setUserlog(false);
-            console.log("no hay un usuario logueado");
         }
     }
     return (
@@ -130,12 +129,14 @@ function NavB() {
                                     <Nav.Link
                                         onClick={() => setModalLogin(true)}
                                     >
-                                        Iniciar Sesión
+                                        <b> Iniciar Sesión </b>
+                                      
+                                        
                                     </Nav.Link>
                                     <Nav.Link
                                         onClick={() => setModalRegister(true)}
                                     >
-                                        Registrarse
+                                       <b>  Registrarse </b>
                                     </Nav.Link>
                                 </Nav>
                             )}

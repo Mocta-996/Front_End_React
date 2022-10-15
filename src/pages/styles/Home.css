@@ -3,3 +3,17 @@
     height: 100vh;
     
 }
+
+.hijo {
+    /* centrar vertical y horizontalmente */
+    position: absolute;
+    top: 40%;
+    left: 30%;
+    margin: -25px 0 0 -25px; /* aplicar a top y al margen izquierdo un valor negativo para completar el centrado del elemento hijo */
+}
+
+
+.logo {
+    width: 100%;
+    height: 100%;
+  }

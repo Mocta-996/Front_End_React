@@ -28,18 +28,18 @@ function AddRoom(props) {
         e.preventDefault();
         // agregar id hotel
         room.hotel_id = props.hotel_id;
-        console.log(room);
+     
         const add = new FormData();
         add.append("imagen", image.data);
         add.append("info", JSON.stringify(room));
 
         try {
-            console.log(add);
+          
             const res = await axios.post(
                 "http://35.239.122.121:4000/api/fulltrip/v1/hotel/addRoom",
                 add
             );
-            console.log(res);
+           
             swAlert("Exito","Habitación agregada con exito","success");
             props.update();
             props.onHide();

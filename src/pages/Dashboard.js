@@ -22,11 +22,8 @@ function Dashboard() {
         if (localStorage.getItem("user")) {
             setUserlog(true);
             setUserdata(JSON.parse(localStorage.getItem("user")));
-            
-            console.log(JSON.parse(localStorage.getItem("user")));
         } else {
             setUserlog(false);
-            console.log("no hay un usuario logueado");
             navigate("/");
         }
     }

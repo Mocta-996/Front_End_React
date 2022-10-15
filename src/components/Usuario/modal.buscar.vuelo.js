@@ -23,7 +23,7 @@ function BuscarVuelo(props) {
     const [radioValue, setRadioValue] = useState("1");
     const [showModalReservar, setShowModalReservar] = useState(false);
     const [showModalResenia,setShowModalResenia] = useState(false);
-    const [dataAuto, setDataAuto] = useState({});
+    const [dataAuto, setDataAuto] = useState([]);
     const [rangemin, setRangemin] = useState(0);
     const [rangemax, setRangemax] = useState(1000);
 
@@ -33,14 +33,13 @@ function BuscarVuelo(props) {
     ];
     const showModal = (data) => {
         setDataAuto(data);
-        console.log(data);
+       
         setShowModalReservar(true);
     }
 
     const showModalRes = (data) => {
-        setShowModalResenia(true);
         setDataAuto(data);
-        console.log(data)
+        setShowModalResenia(true);       
     }
     const handleChange = (e) => {
         setSearch(e.target.value);
@@ -65,7 +64,7 @@ function BuscarVuelo(props) {
     const handlerData = async () => {
         try{
             const res= await axios.get("http://35.239.122.121:4000/api/fulltrip/v1/aerolinea/flights");
-            console.log(res.data.data)
+          
             setAuto(res.data.data);
             setTableAuto(res.data.data);
           }catch(ex){
@@ -233,6 +232,9 @@ function BuscarVuelo(props) {
                     data={dataAuto}
                     showoption={3}
                     userdata = {props.userdata}
+                    updateDashboard = {props.updateDashboard}
+                    update = {handlerData}
+                    updateDashboard = {props.updateDashboard}
                 />
 
                 {/* VER SERVICIO */}
@@ -241,6 +243,7 @@ function BuscarVuelo(props) {
                     onHide={() => setShowModalResenia(false)}
                     data={dataAuto}
                     showoption={3}
+                    updateDashboard = {props.updateDashboard}
                 />
             </Modal.Body>
         </Modal>
